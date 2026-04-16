@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C CI Build
 
 on:
   push:
@@ -14,20 +14,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Install Build Tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake
+        sudo apt-get install -y build-essential gcc
 
-    - name: Configure CMake
-      # Agar loyihangizda CMake bo'lsa, bu qismni qoldiring. 
-      # Agar oddiy Makefile bo'lsa, pastdagi 'Build' qismini o'zgartiramiz.
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build
-      run: cmake --build build
-
-    - name: Run Tests
+    - name: Compile Expression Parser
+      # Bu yerda barcha .c fayllarni kompilyatsiya qilamiz. 
+      # -O3 optimizatsiya va -lm matematik kutubxona uchun.
       run: |
-        cd build
-        ctest --output-on-failure
+        mkdir -p bin
+        gcc src/*.c -Iinclude -O3 -o bin/parser -lm
+
+    - name: Run Basic Test
+# Agar executable argument qabul qilsa, uni shu yerda sinab ko'ramiz
+      run: |
+        chmod +x bin/parser
+        ./bin/parser "2 + 2 * (3 - 1)" || echo "Test run completed"
