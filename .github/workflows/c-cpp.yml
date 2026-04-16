@@ -1,4 +1,4 @@
-name: C CI Build
+name: C CI (using Makefile)
 
 on:
   push:
@@ -12,22 +12,20 @@ jobs:
 
     steps:
     - name: Checkout repository
+      # Kodni yuklab olish
       uses: actions/checkout@v4
 
-    - name: Install Build Tools
+    - name: Install dependencies
+      # Build-essential paketi ichida make va gcc bo'ladi
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential gcc
+        sudo apt-get install -y build-essential
 
-    - name: Compile Expression Parser
-      # Bu yerda barcha .c fayllarni kompilyatsiya qilamiz. 
-      # -O3 optimizatsiya va -lm matematik kutubxona uchun.
-      run: |
-        mkdir -p bin
-        gcc src/*.c -Iinclude -O3 -o bin/parser -lm
+    - name: Build with Makefile
+      # Makefile-da ko'rsatilgan standart qoidani (odatda 'all') ishga tushiradi
+      run: make
 
-    - name: Run Basic Test
-# Agar executable argument qabul qilsa, uni shu yerda sinab ko'ramiz
-      run: |
-        chmod +x bin/parser
-        ./bin/parser "2 + 2 * (3 - 1)" || echo "Test run completed"
+    - name: Run Tests
+      # Agar Makefile ichida 'test' qoidasi bo'lsa, shuni ishlatadi. 
+      # Bo'lmasa, o'zingizning binary faylingizni (masalan, ./parser) chaqiring.
+      run: make test || ./expression_parser "2+2"
