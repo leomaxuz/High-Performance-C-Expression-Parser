@@ -4,6 +4,7 @@ A fast and lightweight mathematical expression parser written in modern C++.
 
 Designed for **high performance**, **low memory overhead**, and **real-time evaluation**, this project implements a stack-based parsing engine capable of handling complex expressions with precision.
 
+![C++ CI](https://github.com/leomaxuz/High-Performance-C-Expression-Parser/actions/workflows/ci.yml/badge.svg)
 ---
 
 ## ⚡ Features
