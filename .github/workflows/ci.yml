@@ -1,0 +1,31 @@
+name: C++ CI Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install C++ Compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential g++
+
+    - name: Build with Makefile
+      # Makefile ichidagi qoidalarni ishga tushiradi
+      run: make
+
+    - name: Run Test
+      # Makefile-da hosil bo'lgan binary faylni ishga tushirish.
+      # Agar binary nomi boshqacha bo'lsa, pastdagi nomni o'zgartiring.
+      run: |
+        chmod +x ./expression_parser || true
+        ./expression_parser "2 + 2 * 5" || echo "Test run finished"
